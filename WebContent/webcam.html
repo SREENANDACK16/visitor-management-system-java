@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insert title here</title>
+<style>
+body
+{
+overflow:hidden;
+}
+        h1
+        {
+        text-align:center;
+        }
+        .cam {
+            display: inline-flex;
+            
+            align-items: center;
+            
+            margin-left:180px;
+            
+        }
+        video, canvas {
+            border: 1px solid black;
+            display:space-between;
+            margin:10px;
+        }
+        #uploadForm {
+            display: none; /* Hide the upload form initially */
+        }
+        .btn1
+        {
+        margin-top:41%;
+       margin-left:-59%;
+        }
+        .btn2
+        {
+        margin-top:900%;
+        margin-left:395%;
+        align-item:center;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Webcam Capture</h1>
+<div class="cam">
+    <video id="video" width="540" height="400" autoplay></video>
+    <canvas id="canvas" width="540" height="400"></canvas><br><br>
+     <button id="capture" class="btn1">Capture</button>
+    <form id="form" action="uploadImage" method="Post">
+    
+    <div id="uploadForm">
+    <input type="hidden" id="action" name="action" value="uploadImage">
+    <input type="hidden" id="imageData" name="imageData" required>
+    </div>
+    <button type="submit" class="btn2">Upload</button>
+</form></div>
+  
+    <script>
+        // Access the webcam
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const uploadForm = document.getElementById('uploadForm');
+        const imageDataInput = document.getElementById('imageData');
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error("Error accessing webcam: ", err);
+            });
+
+        // Capture image
+        document.getElementById('capture').addEventListener('click', () => {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            // You can save or send the image here
+            const imageData = canvas.toDataURL('image/png'); 
+            imageDataInput.value = imageData; // Set hidden input value
+            uploadForm.style.display = 'block'; 
+        });
+    </script>
+
+</body>
+</html>
